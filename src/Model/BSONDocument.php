@@ -76,6 +76,12 @@ class BSONDocument extends ArrayObject implements JsonSerializable, Serializable
      */
     public function jsonSerialize()
     {
-        return (object) $this->getArrayCopy();
+        $obj = $this->getArrayCopy();
+        foreach ($obj as $key => $elem) {
+            if(is_object($elem) && get_class($elem) === "MongoDB\BSON\ObjectID"){
+                $obj[$key] = $elem->__toString();
+            }
+        }
+        return (object) $obj;
     }
 }
